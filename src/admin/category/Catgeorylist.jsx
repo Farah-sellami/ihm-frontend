@@ -1,83 +1,100 @@
-import { AiOutlinePlus } from "react-icons/ai";
-import { NavLink } from "react-router-dom";
-import { Title, PrimaryButton, ProfileCard } from "../../router";
-import { TiEyeOutline } from "react-icons/ti";
-import { CiEdit } from "react-icons/ci";
-import { MdOutlineDeleteOutline } from "react-icons/md";
-import { User2 } from "../../components/hero/Hero";
+import { useEffect, useState } from "react";
+import { Pagination } from "@mui/material";
+import categoryService from "../../api/categoryService";
 
 export const Catgeorylist = () => {
+  const [allCategories, setAllCategories] = useState([]); // toutes les catégories
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await categoryService.getAllCategories();
+        setAllCategories(data);
+      } catch (error) {
+        console.error("Erreur de chargement :", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // 🔎 Appliquer le filtre
+  const filteredCategories = allCategories.filter((cat) =>
+    cat.titre.toLowerCase().includes(search.toLowerCase())
+  );
+
+  // 📄 Pagination côté client
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredCategories.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
+
   return (
-    <>
-      <section className="shadow-s1 p-8 rounded-lg">
-        <div className="flex justify-between">
-          <Title level={5} className=" font-normal">
-            Category Lists
-          </Title>
-          <NavLink to="/category/create">
-            <PrimaryButton className="flex items-center gap-3 px-5 py-2 text-sm rounded-md transition-transform hover:scale-105">
-              <AiOutlinePlus size={20} />
-              <span>Create Category</span>
-            </PrimaryButton>
-          </NavLink>
+    <div className="w-full flex justify-center px-4">
+      <div className="w-full max-w-6xl mt-32 mb-10 shadow-s1 p-8 rounded-lg bg-white">
+        {/* Barre de recherche */}
+        <div className="mb-4">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setCurrentPage(1); // reset page à 1 si on tape
+            }}
+            placeholder="Rechercher par titre..."
+            className="border px-4 py-2 rounded-md w-full"
+          />
         </div>
-        <hr className="my-5" />
-        <div className="relative overflow-x-auto rounded-lg">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+
+        {/* Tableau */}
+        <div className="overflow-x-auto rounded-lg">
+          <table className="min-w-[600px] w-full text-sm text-left text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-100">
               <tr>
-                <th scope="col" className="px-6 py-5">
-                  S.N
-                </th>
-                <th scope="col" className="px-20 py-5">
-                  User
-                </th>
-                <th scope="col" className="px-6 py-5">
-                  Title
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Date
-                </th>
-                <th scope="col" className="px-6 py-3 flex justify-end">
-                  Action
-                </th>
+                <th className="px-6 py-4">#</th>
+                <th className="px-6 py-4">Titre</th>
+                <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
-              <tr className="bg-white border-b hover:bg-gray-50">
-                <td className="px-6 py-4">1</td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center px-6 text-gray-900 whitespace-nowrap">
-                    <div>
-                      <ProfileCard>
-                        <img src={User2} alt="" />
-                      </ProfileCard>
-                    </div>
-                    <div className="pl-3">
-                      <div className="text-base font-semibold capitalize"> Sunil BK</div>
-                      <div className="font-normal text-gray-500"> example@gmail.com</div>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4">Categeory One</td>
-                <td className="px-6 py-4">Dec 10 2020</td>
-
-                <td className="px-6 py-4 text-center flex items-center justify-end gap-3 mt-1">
-                  <NavLink to="#" type="button" className="font-medium text-indigo-500">
-                    <TiEyeOutline size={25} />
-                  </NavLink>
-                  <NavLink to={`/category/update/1000`} className="font-medium text-green">
-                    <CiEdit size={25} />
-                  </NavLink>
-                  <button className="font-medium text-red-500">
-                    <MdOutlineDeleteOutline size={25} />
-                  </button>
-                </td>
-              </tr>
+              {currentItems.length > 0 ? (
+                currentItems.map((cat, index) => (
+                  <tr key={cat.id} className="bg-white border-b hover:bg-gray-50">
+                    <td className="px-6 py-4">
+                      {(currentPage - 1) * itemsPerPage + index + 1}
+                    </td>
+                    <td className="px-6 py-4">{cat.titre}</td>
+                    <td className="px-6 py-4 text-right">...</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="3" className="text-center px-6 py-4">
+                    Aucun résultat trouvé.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
-      </section>
-    </>
+
+        {/* Pagination */}
+        <div className="mt-4 flex justify-end">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={(event, value) => setCurrentPage(value)}
+            color="primary"
+          />
+        </div>
+      </div>
+    </div>
   );
 };
+
+//install npm install @mui/material @emotion/react @emotion/styled
+// npm install @mui/material @emotion/react @emotion/styled @emotion/cache
+

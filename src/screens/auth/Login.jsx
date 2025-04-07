@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { Caption, Container, CustomNavLink, PrimaryButton, Title } from "../../router";
 import { commonClassNameOfInput } from "../../components/common/Design";
 import authService from "../../api/authService";
+import { Link } from "react-router-dom";
+
+
+
 export const Login = () => {
   const [formValues, setFormValues] = useState({
     CIN: "",
@@ -19,13 +22,21 @@ export const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
-      const data = await authService.login(formValues); // Appel au service de connexion
-      console.log("Success:", data); // Vous pouvez ajouter une gestion du token si nécessaire (par exemple, stockage dans le localStorage)
-      navigate("/Auctions");  // Rediriger vers la page des enchères
+      const data = await authService.login(formValues);
+      console.log("Success:", data);
+
+      // Récupérer les infos utilisateur (par exemple depuis localStorage ou authService)
+      const currentUser = authService.getAuthenticatedUser();
+
+      if (currentUser.role === 0) {
+        navigate("/dashboard");
+      } else {
+        navigate("/Auctions");
+      }
     } catch (err) {
-      setError(err.message);  // Enregistrer l'erreur pour l'afficher
+      setError(err.message || "Login failed");
     }
   };
 
@@ -40,9 +51,11 @@ export const Login = () => {
                 Log In
               </Title>
               <div className="flex items-center gap-3">
-                <Title level={5} className="text-white font-normal text-xl">
-                  Home
-                </Title>
+              <Link to="/" className="text-white font-normal text-xl" onClick={() => console.log("clicked")}>
+  Home
+</Link>
+
+
                 <Title level={5} className="text-white font-normal text-xl">
                   /
                 </Title>

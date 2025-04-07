@@ -5,7 +5,6 @@ export const Home = () => {
   return (
     <>
       <Hero />
-     
       <CategorySlider />
       <Process />
       <ProductList />

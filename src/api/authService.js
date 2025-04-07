@@ -18,18 +18,35 @@ const authService = {
   },
 
   // Connecter un utilisateur
-  login: async (credentials) => {
-    try {
-      const response = await axiosInstance.post('/login', credentials);
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response?.data?.error || 'Identifiants invalides');
-    }
-  },
+ // Connecter un utilisateur
+login: async (credentials) => {
+  try {
+    const response = await axiosInstance.post('/login', credentials);
+    console.log("response of login :", response.data);
+
+    const { token, user } = response.data;
+
+    // 👉 Stocker le token et éventuellement l'utilisateur dans le localStorage
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+
+    return response.data;
+
+  } catch (error) {
+    throw new Error(error.response?.data?.error || 'Identifiants invalides');
+  }
+},
+
 // Vérifier si l'utilisateur est authentifié
 isAuthenticated: () => {
   const token = localStorage.getItem('token');
+  console.log("response of is authenticated :", token);
   return !!token; // Retourne true si un token est présent
+},
+
+getAuthenticatedUser: () => {
+  const user = localStorage.getItem("user");
+  return user ? JSON.parse(user) : null;
 },
 
 // Déconnecter l'utilisateur

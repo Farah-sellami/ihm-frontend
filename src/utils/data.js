@@ -30,6 +30,43 @@ export const menulists = [
   //   link: "Contact",
   // },
 ];
+export const menulistsAdmin = [
+  {
+    id: 0,
+    path: "/dashboard",
+    link: "dashboard",
+  },
+  {
+    id: 1,
+    path: "/category",
+    link: "category",
+  },
+  {
+    id: 2,
+    path: "/scategory",
+    link: "scategory",
+  },
+  {
+    id: 3,
+    path: "/userlist",
+    link: "users",
+  },
+  {
+    id: 4,
+    path: "/postes ",
+    link: "poste ",
+  },
+  // {
+  //   id: 5,
+  //   path: "/services",
+  //   link: "Services",
+  // },
+  // {
+  //   id: 6,
+  //   path: "/contact",
+  //   link: "Contact",
+  // },
+];
 
 export const categorylists = [
   {

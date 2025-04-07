@@ -52,9 +52,9 @@ function App() {
           <Route
             path="/login"
             element={
-              <Layout>
+              // <Layout>
                 <Login />
-              </Layout>
+              // </Layout>
             }
           />
           <Route
@@ -70,9 +70,9 @@ function App() {
           <Route
             path="/register"
             element={
-              <Layout>
+              // <Layout>
                 <Register />
-              </Layout>
+              // </Layout>
             }
           />
           <Route
@@ -208,9 +208,9 @@ function App() {
             element={
               <PrivateRoute>
                 <Layout>
-                  <DashboardLayout>
+                  {/* <DashboardLayout> */}
                     <Catgeorylist />
-                  </DashboardLayout>
+                  {/* </DashboardLayout> */}
                 </Layout>
               </PrivateRoute>
             }
