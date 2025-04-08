@@ -22,18 +22,18 @@ const userService = {
   },
 
   // Créer un nouvel utilisateur
-  createUser: async (userData) => {
-    try {
-      const response = await axiosInstance.post('/users', userData, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // utile si tu envoies une image
-        },
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
+  // createUser: async (userData) => {
+  //   try {
+  //     const response = await axiosInstance.post('/users', userData, {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data', // utile si tu envoies une image
+  //       },
+  //     });
+  //     return response.data;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // },
 
   // Mettre à jour un utilisateur
   updateUser: async (id, userData) => {
@@ -53,6 +53,25 @@ const userService = {
   deleteUser: async (id) => {
     try {
       const response = await axiosInstance.delete(`/users/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  // Bloquer un utilisateur
+  blockUser: async (id) => {
+    try {
+      const response = await axiosInstance.post(`/users/${id}/block`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Débloquer un utilisateur
+  unblockUser: async (id) => {
+    try {
+      const response = await axiosInstance.post(`/users/${id}/unblock`);
       return response.data;
     } catch (error) {
       throw error;

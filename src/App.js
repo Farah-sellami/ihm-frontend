@@ -1,30 +1,36 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import {
-  LoginAsSeller,
-  Register,
-  Login,
-  UserProfile,
-  DashboardLayout,
-  Layout,
-  CreateCategory,
-  UpdateCategory,
-  Catgeorylist,
-  UpdateProductByAdmin,
-  AdminProductList,
-  Income,
-  Dashboard,
-  ProductList,
-  ProductEdit,
   AddProduct,
-  ProductsDetailsPage,
+  AdminProductList,
+  CategoryList,
+  CreateCategory,
+  Dashboard,
+  DashboardLayout,
   Home,
-  UserList,
-  WinningBidList,
-  NotFound,
-  ScrollToTop,
-  PrivateRoute,
+  Income,
+  Layout,
   ListAuction,
-} from "./router/index.js";
+  Login,
+  LoginAsSeller,
+  NotFound,
+  PrivateRoute,
+  ProductEdit,
+  ProductList,
+  ProductsDetailsPage,
+  Register,
+  SCategoryList,
+  ScrollToTop,
+  UpdateCategory,
+  UpdateProductByAdmin,
+  UserList,
+  UserProfile,
+  WinningBidList
+} from "./router/index.js";  
+
+// Utilisation des composants importés dans ton code
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -172,9 +178,9 @@ function App() {
             element={
               <PrivateRoute>
                 <Layout>
-                  <DashboardLayout>
+                  {/* <DashboardLayout> */}
                     <UserList />
-                  </DashboardLayout>
+                  {/* </DashboardLayout> */}
                 </Layout>
               </PrivateRoute>
             }
@@ -209,7 +215,7 @@ function App() {
               <PrivateRoute>
                 <Layout>
                   {/* <DashboardLayout> */}
-                    <Catgeorylist />
+                    <CategoryList />
                   {/* </DashboardLayout> */}
                 </Layout>
               </PrivateRoute>
@@ -239,6 +245,19 @@ function App() {
               </PrivateRoute>
             }
           />
+                    <Route
+            path="/scategory"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  {/* <DashboardLayout> */}
+                    <SCategoryList />
+                  {/* </DashboardLayout> */}
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+    
           <Route
             path="/*"
             element={
@@ -249,6 +268,9 @@ function App() {
           />
         </Routes>
       </BrowserRouter>
+
+      {/* Toast Container pour afficher les notifications */}
+      <ToastContainer />
     </>
   );
 }

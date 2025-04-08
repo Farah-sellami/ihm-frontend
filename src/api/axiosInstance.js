@@ -1,22 +1,24 @@
 import axios from "axios";
+import { toast } from "react-toastify";
+
 const API_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000/api";
 
-
 const axiosInstance = axios.create({
-  baseURL: API_URL, 
+  baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Ajouter un intercepteur pour inclure le token JWT dans les requêtes
 axiosInstance.interceptors.request.use(
-    (config) => {
-      try {
-      const token = localStorage.getItem("token"); // Récupérer le token stocké
-      console.log("Token récupéré :", token);
+  (config) => {
+    try {
+      const token = localStorage.getItem("token");
       if (token) {
-        config.headers["Authorization"] = `Bearer ${token}`; // Ajouter le token à l'en-tête
+        config.headers["Authorization"] = `Bearer ${token}`;
+        if (process.env.NODE_ENV === "development") {
+          console.log("Token récupéré :", token);
+        }
       }
     } catch (error) {
       console.error("Erreur lors de la récupération du token :", error);
@@ -24,25 +26,25 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   (error) => {
-    // Gestion des erreurs lors de la configuration de la requête
-    console.error("Erreur dans l'intercepteur des requêtes :", error);
     return Promise.reject(error);
   }
 );
 
-
-// Ajouter un intercepteur pour gérer les erreurs de réponse
 axiosInstance.interceptors.response.use(
-  (response) => response, // Retourner directement la réponse si elle est valide
+  (response) => response,
   (error) => {
-    console.error("Erreur dans la réponse de l'API :", error);
     if (error.response && error.response.status === 401) {
-      // Gestion du cas où le token est expiré ou invalide
-      console.warn("Token expiré ou non valide. Redirection vers la page de connexion...");
-      // Optionnel : rediriger l'utilisateur vers une page de connexion
-      window.location.href = "/login";
+      toast.error("Session expirée. Redirection vers la connexion...", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+
+      setTimeout(() => {
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+      }, 4000); //Attendre 4 secondes avant de rediriger
     }
-    return Promise.reject(error); // Propager l'erreur pour un traitement ultérieur
+    return Promise.reject(error);
   }
 );
 

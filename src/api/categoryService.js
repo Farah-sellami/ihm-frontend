@@ -29,7 +29,14 @@ const categoryService = {
   deleteCategory: async (id) => {
     const response = await axiosInstance.delete(`/categories/${id}`);
     return response.data;
-  }
+  },
+
+  getSubcategoriesByCategoryId: async (id) => {
+    const response = await axiosInstance.get(`/categorie/${id}/sous-categories`);
+    return response.data;
+  },
 };
+
+
 
 export default categoryService;

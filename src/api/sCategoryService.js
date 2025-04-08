@@ -29,6 +29,12 @@ const sCategoryService = {
   deleteSubcategory: async (id) => {
     const response = await axiosInstance.delete(`/scategories/${id}`);
     return response.data;
+  },
+
+   // Récupérer les sous-catégories d'une catégorie spécifique
+  getSubcategoriesByCategoryId: async (categorieID) => {
+    const response = await axiosInstance.get(`/categories/${categorieID}/subcategories`);
+    return response.data;
   }
 };
 
